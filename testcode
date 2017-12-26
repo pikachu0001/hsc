@@ -1,0 +1,8 @@
+writeln math.pi * 10
+writeln 2 + 	3
+write "that's a \""
+writeln 'string"'
+write 5 + math.e
+writeln
+halt
+writeln 22

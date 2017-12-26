@@ -15,11 +15,9 @@
 
 
 
-
 // include this .h file only once aka if SYMTAB has not been never defined yet
 #ifndef SYMTAB
 #define SYMTAB
-
 
 
 
@@ -27,7 +25,6 @@
 #include <stdlib.h>
 // string.h for strcpy()
 #include <string.h>
-
 
 
 
@@ -41,22 +38,26 @@ typedef struct node {
 
 
 
-
 // initialize global variables since they are used by both lex and yacc
-
-
-// set scope level to 0 
+// set scope level to 0
 int scope = 0;
 // set head of the symbol table to null
 Node *head = NULL;
-
-
+// functions declaration: in this the order of writing functions does not matter
+Node *push(char *name);
+Node *lookup(char *name);
+void pop();
+void set_value(Node *node, double value);
 
 
 
 // create a node and set just the name and push it to the list ie add as head
 Node *push(char *name) {
-	Node *node = malloc(sizeof(Node));
+	Node *node = lookup(name);
+	if (node != NULL) {
+		return node;
+	}
+	node = malloc(sizeof(Node));
 	node->name = malloc(sizeof(name) + 1);	// +1 for the zero-terminator char '\0' 
 	strcpy(node->name, name);
 	node->scope = scope;
@@ -67,9 +68,8 @@ Node *push(char *name) {
 
 
 
-
 // pop a node from the list ie remove as head
-void *pop() {
+void pop() {
 	if (head != NULL) {
 		Node *node = head;
 		head = head->next;
@@ -80,17 +80,25 @@ void *pop() {
 
 
 
-
 // here some setters used by yacc to set some variables according to some fired productions
 // set some values of some previously pushed but not fully initialized variables by the lexer
 // in the symbol table
-
 
 // set double value
 void set_value(Node *node, double value) {
 	node->value = value;
 }
 
+
+
+// lookup
+Node *lookup(char *name) {
+	Node *node = head;
+	while(node != NULL && strcmp(node->name, name) != 0) {
+		node = node->next;
+	}
+	return node;
+}
 
 
 
