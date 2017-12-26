@@ -28,13 +28,15 @@
 
 
 
+
 // define node structure of a linked list
 typedef struct node {
 	char *name;
-	double value;
 	int scope;
+	double value;
 	struct node *next;
 } Node;
+
 
 
 

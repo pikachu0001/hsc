@@ -9,6 +9,10 @@ extern void write_string(char *string);
 extern void writeln_string(char *string);
 extern void write_expression(double expression);
 extern void writeln_expression(double expression);
+extern void declare_variable(char *name, char* type);
+extern void assign_to_variable(char *name, double value);
+extern double get_variable_value(char *name);
+#define YYDEBUG 0
 %}
 
 
@@ -20,10 +24,9 @@ extern void writeln_expression(double expression);
 	char *str;
 	Node *sym;
 }
-%token <chr> ADD SUB MUL DIV ASSIGN NEWLINE ROUND_OPEN ROUND_CLOSE WRITE WRITELN HALT
-%token <dbl> PI E NUM
-%token <str> STRING
-%token <sym> VAR
+%token <chr> ADD SUB MUL DIV NEWLINE ROUND_OPEN ROUND_CLOSE COLON ASSIGNMENT WRITE WRITELN HALT VAR
+%token <dbl> PI E NUM BOOLEAN
+%token <str> TYPE ID STRING
 %type <dbl> expression constant
 %left ADD SUB
 %left MUL DIV
@@ -44,8 +47,20 @@ program			:	statement program
 
 
 
-statement		:	write
+statement		:	declaration
+				|	assignment
+				|	write
 				| 	HALT													{/* interrupt execution */ exit(0);}
+				;
+
+
+
+declaration		:	VAR ID COLON TYPE										{declare_variable($2, $4);}
+				;
+
+
+
+assignment		:	ID ASSIGNMENT expression								{assign_to_variable($1, $3);}
 				;
 
 
@@ -65,13 +80,18 @@ expression		:	expression ADD expression								{$$ = $1 + $3;}
 				|	expression DIV expression								{$$ = $1 / $3;}
 				|	ROUND_OPEN expression ROUND_CLOSE						{$$ = $2;}
 				|	constant												{$$ = $1;}
+				|	BOOLEAN													{$$ = $1;}
 				|	NUM														{$$ = $1;}
+				|	ID														{$$ = get_variable_value($1);}
 				;
 
 
 constant		:	PI														{$$ = 3.14159265359;}
 				|	E														{$$ = 2.71828182846;}
 				;
+
+
+
 
 
 
@@ -91,11 +111,14 @@ constant		:	PI														{$$ = 3.14159265359;}
 */
 
 int main() {
-	return yyparse();
+	#if YYDEBUG
+        yydebug = 1;
+    #endif
+    return yyparse();
 }
 
 void yyerror(const char *str) {
-	fprintf(stderr, "Ops! %s\n", str);
+	fprintf(stderr, "\x1B[31mERROR!\x1B[33m %s\x1B[0m\n", str);
 	exit(0);
 }
 
@@ -115,53 +138,32 @@ void writeln_expression(double expression) {
 	printf("%f\n", expression);
 }
 
+void declare_variable(char *name, char* type) {
+	Node *node = lookup(name);
+	if (node != NULL) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "The variable \"%s\" has been already declared.", name);
+		yyerror(error);
+	}
+	push(name);
+}
 
+void assign_to_variable(char *name, double value) {
+	Node *node = lookup(name);
+	if (node == NULL) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "Cannot assign the value. The variable \"%s\" has not been declared.", name);
+		yyerror(error);
+	}
+	set_value(node, value);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-
-
-
-
-program	: stmt program
-		| NEWLINE program
-		| HALT								{printf("Bye!\n"); exit(0);}
-		;
-
-stmt	: NEWLINE 							{printf("\n>> ");}
-		| exp								{printf(">> %f\n>> ", $1);}
-		| VAR ASSIGN exp					{set_value($1, $3);	printf(">> ");}
-		;
-
-exp		: exp ADD exp						{$$ = $1 + $3;}
-		| exp SUB exp						{$$ = $1 - $3;}
-		| exp MUL exp						{$$ = $1 * $3;}
-		| exp DIV exp						{$$ = $1 / $3;}
-		| NUM								{$$ = $1;}
-		| VAR								{printf("hi\n");
-											$$ = $1->value;}
-		;
-
-
-
-*/
+double get_variable_value(char *name) {
+	Node *node = lookup(name);
+	if (node == NULL) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "Cannot assign the value. The variable \"%s\" has not been declared.", name);
+		yyerror(error);
+	}
+	return node->value;
+}

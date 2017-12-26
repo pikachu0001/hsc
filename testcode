@@ -1,8 +1,16 @@
 writeln math.pi * 10
 writeln 2 + 	3
+(* wow that's
+a comment*)
 write "that's a \""
 writeln 'string"'
 write 5 + math.e
+(* another one! *)
 writeln
+var pippo:boolean
+pippo := false
+writeln 66
+writeln pippo
+var pippo:string
 halt
 writeln 22
