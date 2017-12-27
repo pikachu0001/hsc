@@ -30,6 +30,7 @@ extern double get_variable_value(char *name);
 %type <dbl> expression constant
 %left ADD SUB
 %left MUL DIV
+%right UMINUS
 %start program
 
 
@@ -40,7 +41,8 @@ extern double get_variable_value(char *name);
 
 
 
-program			:	statement program
+program			:	statement NEWLINE program
+				|	statement
 				|	NEWLINE program
 				|															{/* epsilon */}
 				;
@@ -78,6 +80,7 @@ expression		:	expression ADD expression								{$$ = $1 + $3;}
 				|	expression SUB expression								{$$ = $1 - $3;}
 				|	expression MUL expression								{$$ = $1 * $3;}
 				|	expression DIV expression								{$$ = $1 / $3;}
+				|	SUB expression %prec UMINUS								{$$ = -$2;}
 				|	ROUND_OPEN expression ROUND_CLOSE						{$$ = $2;}
 				|	constant												{$$ = $1;}
 				|	BOOLEAN													{$$ = $1;}
@@ -101,14 +104,6 @@ constant		:	PI														{$$ = 3.14159265359;}
 
 
 #include "lex.yy.c"
-
-/*
-
-			:	declaration	NEWLINE
-			|	assignment	NEWLINE
-			|	
-
-*/
 
 int main() {
 	#if YYDEBUG
