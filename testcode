@@ -1,21 +1,24 @@
 writeln math.pi * 10
 writeln 2 + 	3
 (* wow that's
-a comment*) write "that's a \""
+a comment*)write "that's a \""
 writeln 'string"'
 writeln 5 + math.e
 write -2 * -4
 (* another one! 
 
 *)
-
-
 writeln
-var x : real
-var pippo:boolean
-pippo := 10
-writeln 66
-writeln pippo + pippo * 20
+(*var x : real*)
+(*var x : boolean*)
+(*var pippo:boolean
+pippo := true*)
+writeln 12.5
+write "false || true && true = "
+writeln false || true && true
+write "(!false || true) && false = "
+writeln (!false || true) && false
+(*writeln pippo + pippo * 20
 var pippo:string
 halt
-writeln 22
+writeln 22*)

@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_OUT_Y_TAB_H_INCLUDED
+# define YY_YY_OUT_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -49,23 +49,27 @@ extern int yydebug;
     SUB = 259,
     MUL = 260,
     DIV = 261,
-    NEWLINE = 262,
-    ROUND_OPEN = 263,
-    ROUND_CLOSE = 264,
-    COLON = 265,
-    ASSIGNMENT = 266,
-    WRITE = 267,
-    WRITELN = 268,
-    HALT = 269,
-    VAR = 270,
-    PI = 271,
-    E = 272,
-    NUM = 273,
-    BOOLEAN = 274,
-    TYPE = 275,
-    ID = 276,
-    STRING = 277,
-    UMINUS = 278
+    AND = 262,
+    OR = 263,
+    NOT = 264,
+    NEWLINE = 265,
+    ROUND_OPEN = 266,
+    ROUND_CLOSE = 267,
+    COLON = 268,
+    ASSIGNMENT = 269,
+    WRITE = 270,
+    WRITELN = 271,
+    HALT = 272,
+    VAR = 273,
+    TRUE = 274,
+    FALSE = 275,
+    TYPE = 276,
+    ID = 277,
+    STRING = 278,
+    PI = 279,
+    E = 280,
+    NUM = 281,
+    UMINUS = 282
   };
 #endif
 /* Tokens.  */
@@ -73,37 +77,41 @@ extern int yydebug;
 #define SUB 259
 #define MUL 260
 #define DIV 261
-#define NEWLINE 262
-#define ROUND_OPEN 263
-#define ROUND_CLOSE 264
-#define COLON 265
-#define ASSIGNMENT 266
-#define WRITE 267
-#define WRITELN 268
-#define HALT 269
-#define VAR 270
-#define PI 271
-#define E 272
-#define NUM 273
-#define BOOLEAN 274
-#define TYPE 275
-#define ID 276
-#define STRING 277
-#define UMINUS 278
+#define AND 262
+#define OR 263
+#define NOT 264
+#define NEWLINE 265
+#define ROUND_OPEN 266
+#define ROUND_CLOSE 267
+#define COLON 268
+#define ASSIGNMENT 269
+#define WRITE 270
+#define WRITELN 271
+#define HALT 272
+#define VAR 273
+#define TRUE 274
+#define FALSE 275
+#define TYPE 276
+#define ID 277
+#define STRING 278
+#define PI 279
+#define E 280
+#define NUM 281
+#define UMINUS 282
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 21 "hsc.yacc" /* yacc.c:1909  */
+#line 14 "src/hsc.yacc" /* yacc.c:1909  */
 
 	int chr;
 	double dbl;
 	char *str;
 	Node *sym;
 
-#line 107 "y.tab.h" /* yacc.c:1909  */
+#line 115 "out/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -116,4 +124,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_OUT_Y_TAB_H_INCLUDED  */

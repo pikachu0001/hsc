@@ -3,7 +3,7 @@
 // http://www.cs.man.ac.uk/~pjj/cs212/ex2_str_comm.html
 #include <stdlib.h>
 #include <string.h>
-#include "symtab/symtab.h"
+#include "../src/symtab.h"
 extern char *parse_string(char *string, int length);
 extern double parse_boolean(char *boolean);
 %}
@@ -14,8 +14,7 @@ extern double parse_boolean(char *boolean);
 DIGIT					[0-9]
 LETTER					[a-zA-Z]
 NUM						{DIGIT}+(\.{DIGIT}+)?
-BOOLEAN					true|false
-TYPE					real|string|boolean
+TYPE					real|boolean
 ID						{LETTER}({LETTER}|{DIGIT})*
 STRING					\"([^\t\n\"]|\\\")*\"|\'([^\t\n\']|\\\')*\'
 COMMENT					\(\*([^*]|\n|\*[^\)])*\*\)
@@ -33,6 +32,9 @@ COMMENT					\(\*([^*]|\n|\*[^\)])*\*\)
 \-						{return SUB;}
 \*						{return MUL;}
 \/						{return DIV;}
+&&						{return AND;}
+\|\|					{return OR;}
+!						{return NOT;}
 \n						{return NEWLINE;}
 \(						{return ROUND_OPEN;}
 \)						{return ROUND_CLOSE;}
@@ -44,10 +46,11 @@ write					{return WRITE;}
 writeln					{return WRITELN;}
 halt					{return HALT;}
 var						{return VAR;}
+true					{return TRUE;}
+false					{return FALSE;}
 {COMMENT}				{}
 {TYPE}					{yylval.str = strdup(yytext); return TYPE;}
 {NUM}					{yylval.dbl = atof(yytext); return NUM;}
-{BOOLEAN}				{yylval.dbl = parse_boolean(yytext); return BOOLEAN;}
 {ID}					{yylval.str = strdup(yytext); return ID;}
 {STRING}				{yylval.str = parse_string(yytext, yyleng); return STRING;}
 .						{yyerror("Unexpected token!"); exit(0);}
@@ -62,7 +65,9 @@ var						{return VAR;}
 
 
 char *parse_string(char *string, int length) {
-	char *str = malloc(sizeof(length));
+	/*
+
+	char *str = malloc(length);
 	int y = 0;
 	for (int i = 1; i < length - 1; i++) {
 		if (string[i] != '\\') {
@@ -70,15 +75,8 @@ char *parse_string(char *string, int length) {
 		}
 	}
 	return str;
-}
 
+	*/
 
-double parse_boolean(char *boolean) {
-	if (strcmp(boolean, "true") == 0) {
-		return 1;
-	}
-	if (strcmp(boolean, "false") == 0) {
-		return 0;
-	}
-	yyerror("Cannot assign a non boolean value");
+	return string;
 }
