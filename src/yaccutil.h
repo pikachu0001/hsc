@@ -3,11 +3,13 @@
 
 
 
+extern int yylineno;
 extern void yyerror(const char *string);
 extern void write_string(char *string);
 extern void write_expression(Node *node);
 extern void declare_variable(char *name, char* type);
 extern void assign_to_variable(char *name, Node *exprattr);
+extern void pop_variables_at_scope_closed();
 extern Node *get_variable_for_exprattr_transmission(char *name);
 extern Node *binary_operation(Node *x, Node *y, char *type, char *op);
 extern double binary_operation_get_value(double x, double y, char *op);
@@ -37,7 +39,7 @@ extern Node *op_not(Node *x);
 
 
 void yyerror(const char *str) {
-	fprintf(stderr, "\x1B[31mERROR!\x1B[33m %s\x1B[0m\n", str);
+	fprintf(stderr, "\x1B[31mERROR near line %d:\x1B[33m %s\x1B[0m\n", yylineno, str);
 	exit(0);
 }
 
@@ -70,7 +72,7 @@ void declare_variable(char *name, char* type) {
 	// check if there exists a variable already declared with the same name and scope equals to the current one
 	// if not, create a new entry in the symbol table with name and type, otherwise raise an error
 	Node *node = lookup(name);
-	if (node != NULL) {
+	if (node != NULL && node->scope == scope) {
 		char *error = malloc(sizeof(100));
 		sprintf(error, "The variable \"%s\" has been already declared in the current scope", name);
 		yyerror(error);
@@ -103,10 +105,19 @@ void assign_to_variable(char *name, Node *exprattr) {
 		yyerror(error);
 	}
 	destroyUnnamedSymbolForExprAttrOnly(exprattr);
-	// set_value(node, value);
 	// TESTS:
 	// + assign to undeclared variable: passed
-	// + assign valid value ie real or boolean:
+	// + assign valid value ie real or boolean: passed
+}
+
+
+
+
+void pop_variables_at_scope_closed() {
+	while(head->scope == scope) {
+		pop();
+	}
+	decrease_scope();
 }
 
 

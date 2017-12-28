@@ -63,13 +63,15 @@ extern int yydebug;
     VAR = 273,
     TRUE = 274,
     FALSE = 275,
-    TYPE = 276,
-    ID = 277,
-    STRING = 278,
-    PI = 279,
-    E = 280,
-    NUM = 281,
-    UMINUS = 282
+    BEGIN_SCOPE = 276,
+    END_SCOPE = 277,
+    TYPE = 278,
+    ID = 279,
+    STRING = 280,
+    PI = 281,
+    E = 282,
+    NUM = 283,
+    UMINUS = 284
   };
 #endif
 /* Tokens.  */
@@ -91,13 +93,15 @@ extern int yydebug;
 #define VAR 273
 #define TRUE 274
 #define FALSE 275
-#define TYPE 276
-#define ID 277
-#define STRING 278
-#define PI 279
-#define E 280
-#define NUM 281
-#define UMINUS 282
+#define BEGIN_SCOPE 276
+#define END_SCOPE 277
+#define TYPE 278
+#define ID 279
+#define STRING 280
+#define PI 281
+#define E 282
+#define NUM 283
+#define UMINUS 284
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -111,7 +115,7 @@ union YYSTYPE
 	char *str;
 	Node *sym;
 
-#line 115 "out/y.tab.h" /* yacc.c:1909  */
+#line 119 "out/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

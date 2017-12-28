@@ -1,4 +1,5 @@
 %option noyywrap
+%option yylineno
 %{
 #include <stdlib.h>
 #include <string.h>
@@ -58,6 +59,8 @@ halt					{return HALT;}
 var						{return VAR;}
 true					{return TRUE;}
 false					{return FALSE;}
+begin					{return BEGIN_SCOPE;}
+end						{return END_SCOPE;}
 {COMMENT}				{}
 {TYPE}					{yylval.str = strdup(yytext); return TYPE;}
 {NUM}					{yylval.dbl = atof(yytext); return NUM;}

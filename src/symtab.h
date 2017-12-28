@@ -182,10 +182,11 @@ void decrease_scope() {
 
 
 
-// lookup
+// lookup: search for a variable with name = name. In case of variables with same name (because of different scopes)
+// pick the variable with the greatest scope number ie the first variable with name = name closest to the top of the stack
 Node *lookup(char *name) {
 	Node *node = head;
-	while(node != NULL && node->scope == scope && strcmp(node->name, name) != 0) {
+	while(node != NULL && strcmp(node->name, name) != 0) {
 		node = node->next;
 	}
 	return node;

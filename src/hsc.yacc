@@ -17,7 +17,7 @@ extern int yylex();
 	char *str;
 	Node *sym;
 }
-%token <chr> ADD SUB MUL DIV AND OR NOT NEWLINE ROUND_OPEN ROUND_CLOSE COLON ASSIGNMENT WRITE WRITELN HALT VAR TRUE FALSE
+%token <chr> ADD SUB MUL DIV AND OR NOT NEWLINE ROUND_OPEN ROUND_CLOSE COLON ASSIGNMENT WRITE WRITELN HALT VAR TRUE FALSE BEGIN_SCOPE END_SCOPE
 %token <str> TYPE ID STRING
 %token <dbl> PI E NUM
 %type <sym> expression boolean number
@@ -40,6 +40,7 @@ extern int yylex();
 program			:	statement NEWLINE program
 				|	statement
 				|	NEWLINE program
+				|	BEGIN_SCOPE {increase_scope();} program END_SCOPE {pop_variables_at_scope_closed();} program
 				|															{/* epsilon */}
 				;
 
