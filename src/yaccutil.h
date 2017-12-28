@@ -7,7 +7,8 @@ extern void yyerror(const char *string);
 extern void write_string(char *string);
 extern void write_expression(Node *node);
 extern void declare_variable(char *name, char* type);
-extern void assign_to_variable(char *name, double value);
+extern void assign_to_variable(char *name, Node *exprattr);
+extern Node *get_variable_for_exprattr_transmission(char *name);
 extern Node *binary_operation(Node *x, Node *y, char *type, char *op);
 extern double binary_operation_get_value(double x, double y, char *op);
 extern Node *unary_operation(Node *x, char *type, char *op);
@@ -59,7 +60,7 @@ void write_expression(Node *node) {
 	} else if (strcmp(node->type, REAL) == 0) {
 		printf("%f", node->value);
 	}
-	destroyUnnamedSymbolForExprAttr(node);
+	destroyUnnamedSymbolForExprAttrOnly(node);
 }
 
 
@@ -83,8 +84,8 @@ void declare_variable(char *name, char* type) {
 
 
 
-void assign_to_variable(char *name, double value) {
-	// assign a value to a variable only if the variable has been previously declared in the current scope
+void assign_to_variable(char *name, Node *exprattr) {
+	// assign an expression to a variable only if the variable has been previously declared in the current scope
 	// if not, raise an error
 	Node *node = lookup(name);
 	if (node == NULL) {
@@ -92,18 +93,35 @@ void assign_to_variable(char *name, double value) {
 		sprintf(error, "Cannot assign the value. The variable \"%s\" has not been declared in the current scope", name);
 		yyerror(error);
 	}
-	// now set the value (double). In case of variable of type boolean, we have to check if the double value
-	// received by lex [double parse_boolean(char *boolean)] is either 0 or 1. If not, we are trying to assign
-	// a real/double value to a boolean variable, which is not allowed. In this case, raise an error
-	if (strcmp(node->type, BOOLEAN) == 0 && (value != 0 || value != 1)) {
+	// now set the value according to the type. Raise an error we try to assign to a variable an expression whose type
+	// is not equal to the one of the variable.
+	if (strcmp(node->type, exprattr->type) == 0) {
+		node->value = exprattr->value;
+	} else {
 		char *error = malloc(sizeof(100));
-		sprintf(error, "Cannot assign a real value \"%f\" to the boolean variable \"%s\"", value, name);
+		sprintf(error, "Assigning a \"%s\" expression to the variable \"%s\" of type \"%s\" is not allowed", exprattr->type, name, node->type);
 		yyerror(error);
 	}
+	destroyUnnamedSymbolForExprAttrOnly(exprattr);
 	// set_value(node, value);
 	// TESTS:
 	// + assign to undeclared variable: passed
-	// + assign valid value ie real or boolean: 
+	// + assign valid value ie real or boolean:
+}
+
+
+
+
+Node *get_variable_for_exprattr_transmission(char *name) {
+	// transmit the node pointer to a variable to an exprattr only if the variable exists in the current scope
+	// if not, raise an error
+	Node *node = lookup(name);
+	if (node == NULL) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "Cannot get the value. The variable \"%s\" has not been declared in the current scope", name);
+		yyerror(error);
+	}
+	return node;
 }
 
 
@@ -113,8 +131,8 @@ Node *binary_operation(Node *x, Node *y, char *type, char *op) {
 	if (strcmp(x->type, type) == 0 && strcmp(x->type, type) == 0) {
 		double value = binary_operation_get_value(x->value, y->value, op);
 		Node *exprattr = createUnnamedSymbolForExprAttr(type, value);
-		destroyUnnamedSymbolForExprAttr(x);
-		destroyUnnamedSymbolForExprAttr(y);
+		destroyUnnamedSymbolForExprAttrOnly(x);
+		destroyUnnamedSymbolForExprAttrOnly(y);
 		return exprattr;
 	}
 	char *error = malloc(sizeof(100));

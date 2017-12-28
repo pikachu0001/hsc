@@ -1,12 +1,15 @@
 %option noyywrap
 %{
-// http://www.cs.man.ac.uk/~pjj/cs212/ex2_str_comm.html
 #include <stdlib.h>
 #include <string.h>
 #include "../src/symtab.h"
-extern char *parse_string(char *string, int length);
-extern double parse_boolean(char *boolean);
+extern char *remove_quotes(char *string, int length);
+// REFERENCES:	http://www.cs.man.ac.uk/~pjj/cs212/ex2_str_comm.html
+//				http://epaperpress.com/lexandyacc/str.html
+char buf[150];
+char *s;
 %}
+%x STR
 
 
 
@@ -16,7 +19,6 @@ LETTER					[a-zA-Z]
 NUM						{DIGIT}+(\.{DIGIT}+)?
 TYPE					real|boolean
 ID						{LETTER}({LETTER}|{DIGIT})*
-STRING					\"([^\t\n\"]|\\\")*\"|\'([^\t\n\']|\\\')*\'
 COMMENT					\(\*([^*]|\n|\*[^\)])*\*\)
 
 
@@ -27,6 +29,14 @@ COMMENT					\(\*([^*]|\n|\*[^\)])*\*\)
 
 
 
+\'						{BEGIN STR; s = buf;}
+<STR>\\n				{*s++ = '\n';}
+<STR>\\t				{*s++ = '\t';}
+<STR>\'\'				{*s++ = '\'';}
+<STR>\'					{*s = 0; BEGIN 0; yylval.str = strdup(buf); return STRING;}
+<STR>\n					{yyerror("Cannot write strings on multiple lines!");}
+<STR>\t					{yyerror("Cannot use direct tabs inside the string! Use \\t instead");}
+<STR>.					{*s++ = *yytext;}
 [\t ]					{}
 \+						{return ADD;}
 \-						{return SUB;}
@@ -52,31 +62,10 @@ false					{return FALSE;}
 {TYPE}					{yylval.str = strdup(yytext); return TYPE;}
 {NUM}					{yylval.dbl = atof(yytext); return NUM;}
 {ID}					{yylval.str = strdup(yytext); return ID;}
-{STRING}				{yylval.str = parse_string(yytext, yyleng); return STRING;}
-.						{yyerror("Unexpected token!"); exit(0);}
+.						{yyerror("Unexpected token!");}
 
 
 
 
 
 %%
-
-
-
-
-char *parse_string(char *string, int length) {
-	/*
-
-	char *str = malloc(length);
-	int y = 0;
-	for (int i = 1; i < length - 1; i++) {
-		if (string[i] != '\\') {
-			str[y++] = string[i];
-		}
-	}
-	return str;
-
-	*/
-
-	return string;
-}

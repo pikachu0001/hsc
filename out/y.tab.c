@@ -1316,13 +1316,13 @@ yyreduce:
 
   case 10:
 #line 56 "src/hsc.yacc" /* yacc.c:1646  */
-    {/*declare_variable($2, $4);*/}
+    {declare_variable((yyvsp[-2].str), (yyvsp[0].str));}
 #line 1321 "out/y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 61 "src/hsc.yacc" /* yacc.c:1646  */
-    {/*assign_to_variable($1, $3);*/}
+    {assign_to_variable((yyvsp[-2].str), (yyvsp[0].sym));}
 #line 1327 "out/y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1424,7 +1424,7 @@ yyreduce:
 
   case 28:
 #line 86 "src/hsc.yacc" /* yacc.c:1646  */
-    {(yyval.sym) = lookup((yyvsp[0].str));}
+    {(yyval.sym) = get_variable_for_exprattr_transmission((yyvsp[0].str));}
 #line 1429 "out/y.tab.c" /* yacc.c:1646  */
     break;
 

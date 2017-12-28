@@ -96,7 +96,11 @@ Node *createUnnamedSymbolForExprAttr(char *type, double value) {
 
 
 // destroy the node of a Expr attr as soon as it is no longer needed eg: after reduce operation
-void destroyUnnamedSymbolForExprAttr(Node *node) {
+void destroyUnnamedSymbolForExprAttrOnly(Node *node) {
+	if (node->name != NULL) {
+		/* It's a node in the symbol table ie a variable. Do not drop it */
+		return;
+	}
 	free(node->type);
 	free(node);
 }

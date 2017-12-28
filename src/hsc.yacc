@@ -53,12 +53,12 @@ statement		:	declaration
 
 
 
-declaration		:	VAR ID COLON TYPE										{/*declare_variable($2, $4);*/}
+declaration		:	VAR ID COLON TYPE										{declare_variable($2, $4);}
 				;
 
 
 
-assignment		:	ID ASSIGNMENT expression								{/*assign_to_variable($1, $3);*/}
+assignment		:	ID ASSIGNMENT expression								{assign_to_variable($1, $3);}
 				;
 
 
@@ -83,7 +83,7 @@ expression		:	ROUND_OPEN expression ROUND_CLOSE						{$$ = $2;}
 				|	NOT expression											{$$ = op_not($2);}
 				|	number													{$$ = $1;}
 				|	boolean													{$$ = $1;}
-				|	ID														{$$ = lookup($1);}
+				|	ID														{$$ = get_variable_for_exprattr_transmission($1);}
 				;
 
 

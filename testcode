@@ -1,24 +1,31 @@
 writeln math.pi * 10
 writeln 2 + 	3
 (* wow that's
-a comment*)write "that's a \""
-writeln 'string"'
+a comment*)writeln	'hello ''world'', how are you?\nFine... "Awwww"'
 writeln 5 + math.e
 write -2 * -4
 (* another one! 
 
 *)
 writeln
-(*var x : real*)
+(*y := 98*)
+var x : real
 (*var x : boolean*)
-(*var pippo:boolean
-pippo := true*)
-writeln 12.5
-write "false || true && true = "
+(*x := true*)
+var pippo:real
+pippo := 2
+writeln 2 * pippo * pippo
+writeln pippo
+pippo := pippo * pippo * pippo * 40
+var copy : real
+copy := pippo
+copy := copy / 40
+writeln pippo
+writeln copy
+(*writeln pluto*)
+write 'false || true && true = '
 writeln false || true && true
-write "(!false || true) && false = "
+write '(!false || true) && false = '
 writeln (!false || true) && false
-(*writeln pippo + pippo * 20
-var pippo:string
 halt
-writeln 22*)
+writeln 'blah'
