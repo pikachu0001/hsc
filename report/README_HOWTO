@@ -1,0 +1,24 @@
+
+// LaTeX
+
+
+
+
+// INSTALL
+
+sudo apt-get install texlive-full
+sudo apt-get install texmaker
+
+
+
+
+// OPEN:
+
+open .tex file with texmaker
+
+
+
+
+// BUILD PDF
+
+press "Run" bbutton with selected option = "Quick Build"
