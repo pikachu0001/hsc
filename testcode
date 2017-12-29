@@ -8,11 +8,11 @@ write -2 * -4
 
 *)
 writeln
-(*writeln 'no tab is		allowed'*)
-(*y := 98*)
+(*writeln 'no tab is		allowed'*)					(* decomment and try error: tab not allowed in string *)
+(*y := 98*)												(* decomment and try error: undeclared variable, cannot assign *)
 var x : real
-(*var x : boolean*)
-(*x := true*)
+(*var x : boolean*)										(* decomment and try error: already declared variable *)
+(*x := true*)											(* decomment and try error: cannot assign boolean to real *)
 var pippo:real
 pippo := 2
 writeln 2 * pippo * pippo
@@ -23,12 +23,14 @@ copy := pippo
 copy := copy / 40
 writeln pippo
 writeln copy
-(*writeln pluto*)
+(*writeln pluto*)										(* decomment and try error: variable does not exist *)
 write 'false || true && true = '
 writeln false || true && true
-write '(!false || true) && false = '
-writeln (!false || true) && false
+write '(!true || false) && true = '
+writeln (!true || false) && true
 
+
+writeln 'try scope'
 
 var w : real
 w := 1

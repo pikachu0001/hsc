@@ -61,29 +61,27 @@ typedef struct node {
 
 
 
-// initialize global variables since they are used by both lex and yacc
 
-
-// set scope level to 0
+// keep track of the current scope level
 int scope = 0;
-
-// set head of the symbol table to null
+// head of the symbol table (stack)
 Node *head = NULL;
 
-// functions declaration: in this the order of writing functions does not matter
+
+
+
+// functions definitions
 Node *createUnnamedSymbolForExprAttr(char* type, double value);
 void push(char *name, char *type);
 void pop();
-int set_double_value(Node *node, double value);
-int set_boolean_value(Node *node, char* boolean);
+Node *lookup(char *name);
 void increase_scope();
 void decrease_scope();
-Node *lookup(char *name);
 
 
 
 
-// create a simple symbol just to keep info for non terminal expression
+// create a simple unnamed symbol just to keep info for non terminal expression in the expression attribute
 Node *createUnnamedSymbolForExprAttr(char *type, double value) {
 	Node *node = malloc(sizeof(Node));
 	node->type = malloc(sizeof(type) + 1);
@@ -95,7 +93,7 @@ Node *createUnnamedSymbolForExprAttr(char *type, double value) {
 
 
 
-// destroy the node of a Expr attr as soon as it is no longer needed eg: after reduce operation
+// destroy the node of an expression attribute as soon as it is no longer needed eg: after reduce operation
 void destroyUnnamedSymbolForExprAttrOnly(Node *node) {
 	if (node->name != NULL) {
 		/* It's a node in the symbol table ie a variable. Do not drop it */
@@ -108,13 +106,12 @@ void destroyUnnamedSymbolForExprAttrOnly(Node *node) {
 
 
 
-// create a node, set name and type, push it to the symbol table as head
+// create a node, set name and type and insert it at the top of the stack
 void push(char *name, char *type) {
-	// allocate memory for the node and char[]
+	// allocate memory for the node and string
 	Node *node = malloc(sizeof(Node));
 	node->name = malloc(sizeof(name) + 1);	// +1 for the zero-terminator char '\0'
 	node->type = malloc(sizeof(type) + 1);
-	// set attributes of the node
 	node->scope = scope;
 	strcpy(node->name, name);
 	strcpy(node->type, type);
@@ -140,48 +137,6 @@ void pop() {
 
 
 
-// here some setters used by yacc to set some variable attrs according to some fired productions
-
-
-// set double value
-int set_double_value(Node *node, double value) {
-	// "real" must match element in regex for type in *.lex
-	if (strcmp(node->type, REAL) != 0) {
-		return 0;
-	}
-	node->value = value;
-	return 1;
-}
-
-// set boolean value
-int set_boolean_value(Node *node, char* boolean) {
-	if (strcmp(node->type, BOOLEAN) != 0) {
-		return 0;
-	}
-	if (strcmp(boolean, BOOL_TRUE) == 0) {
-		node->value = 1;
-		return 1;
-	}
-	if (strcmp(boolean, BOOL_FALSE) == 0) {
-		node->value = 0;
-		return 1;
-	}
-	return 0;
-}
-
-// increase scope counter
-void increase_scope() {
-	scope++;
-}
-
-// decrease scope
-void decrease_scope() {
-	scope--;
-}
-
-
-
-
 // lookup: search for a variable with name = name. In case of variables with same name (because of different scopes)
 // pick the variable with the greatest scope number ie the first variable with name = name closest to the top of the stack
 Node *lookup(char *name) {
@@ -190,6 +145,22 @@ Node *lookup(char *name) {
 		node = node->next;
 	}
 	return node;
+}
+
+
+
+
+// increase scope counter
+void increase_scope() {
+	scope++;
+}
+
+
+
+
+// decrease scope counter
+void decrease_scope() {
+	scope--;
 }
 
 

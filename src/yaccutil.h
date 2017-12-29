@@ -3,6 +3,26 @@
 
 
 
+
+// include this .h file only once aka if YACCUTIL has not been never defined yet
+#ifndef YACCUTIL
+#define YACCUTIL
+
+
+
+
+// constants (must match token in lex file)
+#ifndef BOOLEAN
+#define BOOLEAN "boolean"
+#endif
+#ifndef REAL
+#define REAL "real"
+#endif
+
+
+
+
+// function definitions
 extern int yylineno;
 extern void yyerror(const char *string);
 extern void write_string(char *string);
@@ -27,21 +47,11 @@ extern Node *op_not(Node *x);
 
 
 
-// constants (must match token in lex file)
-#ifndef BOOLEAN
-#define BOOLEAN "boolean"
-#endif
-#ifndef REAL
-#define REAL "real"
-#endif
-
-
-
-
 void yyerror(const char *str) {
 	fprintf(stderr, "\x1B[31mERROR near line %d:\x1B[33m %s\x1B[0m\n", yylineno, str);
 	exit(0);
 }
+
 
 
 
@@ -239,3 +249,8 @@ Node *op_or(Node *x, Node *y) {
 Node *op_not(Node *x) {
 	return unary_operation(x, BOOLEAN, "!");
 }
+
+
+
+
+#endif
