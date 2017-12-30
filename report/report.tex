@@ -69,8 +69,16 @@ Ravinder \textsc{Singh} \hfill rsingh@unibz.it
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
 \section{Introduction}
-TO-DO
 \vspace{0.5cm}
+The aim of the project is the realization of a compiler for a particular language by means of lex and yacc. A compiler is a program which converts a program written in a language, usually denoted as source into an equivalent program written in another language, usually denoted as target language. The process of compilation comprises two parts: analysis and syntesis.\\\\
+\textit{Analysis}: the source program is read and its structure is analysed.\\
+\textit{Syntesis}: an intermediate code is generated from the intermediate representation of the language returned at the end of the analysis part. An optimization process will occur and the target program will be eventually generated.\\\\
+The project is focused on the first part of the compilation only i.e. the analysis part which consists of two subtasks:
+\begin{enumerate}
+\item Split the source program and categorize each sequence of characters into tokens by reading it left-to-right. Regular expression are used in order to tokenize the source program. (Lex)
+\item Find the hierarchical structure of the source program expressed by recursive rules reflecting a context-free grammar. Moreover, additional information to give meaning to the program are computed involving adding information to the \textit{symbol table} and type checking. (Yacc)
+\end{enumerate}
+\pagebreak
 
 
 
