@@ -8,7 +8,6 @@
 	http://www.learn-c.org/en/Linked_lists
 	https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files
 	https://www.youtube.com/watch?v=EzBTm73_oU8
-	https://www.daniweb.com/programming/software-development/threads/389491/unterminated-ifndef
 	https://stackoverflow.com/questions/7751366/malloc-memory-for-c-string-inside-a-structure
 
 */

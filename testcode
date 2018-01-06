@@ -1,33 +1,50 @@
 writeln math.pi * 10
 writeln 2 + 	3
+
 (* wow that's
 a comment*)writeln	'hello ''world'', how are you?\nFine... "Awwww"'
+
 writeln 5 + math.e
 write -2 * -4
+
 (* another one! 
 
 *)
 writeln
+
 (*writeln 'no tab is		allowed'*)					(* decomment and try error: tab not allowed in string *)
 (*y := 98*)												(* decomment and try error: undeclared variable, cannot assign *)
 var x : real
 (*var x : boolean*)										(* decomment and try error: already declared variable *)
 (*x := true*)											(* decomment and try error: cannot assign boolean to real *)
+
 var pippo:real
 pippo := 2
 writeln 2 * pippo * pippo
 writeln pippo
 pippo := pippo * pippo * pippo * 40
+
 var copy : real
 copy := pippo
 copy := copy / 40
 writeln pippo
 writeln copy
+
 (*writeln pluto*)										(* decomment and try error: variable does not exist *)
+
 write 'false || true && true = '
 writeln false || true && true
 write '(!true || false) && true = '
 writeln (!true || false) && true
+
+var pluto : boolean
+pluto := true
+writeln pluto
+pluto := !pluto
+writeln pluto
+
+
+
 
 
 writeln 'try scope'
@@ -67,6 +84,26 @@ begin
 end
 
 writeln w (* 1 *)
+
+
+
+writeln 'Another one'
+x := 1
+writeln x                (* here x has value 1 *)
+begin
+   x := 12.5
+   writeln x             (* here x has value 12.5 *)
+   var x : real
+   x := 2
+   writeln x             (* here x has value 2 *)
+   begin
+      var x : boolean
+      x := true
+      writeln x          (* here x has value true *)
+   end
+   writeln x             (* here x has value 2 *)
+end
+writeln x                (* here x has value 12.5 *)
 
 
 

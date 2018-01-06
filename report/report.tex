@@ -2,6 +2,18 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,     
+    urlcolor=blue,
+}
+\lstset{language=Pascal}
+\lstset{showstringspaces=false}
+% http://users.ecs.soton.ac.uk/srg/softwaretools/document/start/listings.pdf
 \begin{document}
 \begin{titlepage}
 \center
@@ -78,7 +90,7 @@ The project is focused on the first part of the compilation only i.e. the analys
 \item Split the source program and categorize each sequence of characters into tokens by reading it left-to-right. Regular expression are used in order to tokenize the source program. (Lex)
 \item Find the hierarchical structure of the source program expressed by recursive rules reflecting a context-free grammar. Moreover, additional information to give meaning to the program are computed involving adding information to the \textit{symbol table} and type checking. (Yacc)
 \end{enumerate}
-\pagebreak
+\vspace{1.7cm}
 
 
 
@@ -87,7 +99,7 @@ The project is focused on the first part of the compilation only i.e. the analys
 %	SYMBOL TABLE
 %----------------------------------------------------------------------------------------
 \section{Symbol table}
-Structure of the symbol table.
+The symbol table is a data structure whose aim is to save additional information we might want to preserve in order to give meaning to the program. It is usually shared among lex and yacc. During the lexical analysis the code is tokenized and categorized. On the other hand, this process of categorization usually results in a loss of information related to the categorized token such as name, value. As a result, a symbol table could be used in order to preseve this information we might loose. Additional attributes will be later on added during the parsing phase such as type, scope, etc. which could be only expressed by the hierchical structure of the program. In this project, the symbol table is a linked list where each node, usually a variable, is denoted by the following four attributes: name, type, value and scope level. Here an example follows.
 \vspace{0.3cm}
 \begin{table}[h!]
 \centering
@@ -100,25 +112,118 @@ rate & real & 12.57 & 0 \\
 Name & Type & Value & Scope
 \end{tabular}
 \end{table}
-\vspace{0.5cm}
+\vspace{1.7cm}
+
 
 
 
 
 %----------------------------------------------------------------------------------------
-%	SAMPLE LISTING
+%	FEATURES OF DEVELOPED COMPILER
 %----------------------------------------------------------------------------------------
-\subsection{Sample Listing}
-Sample listing
-\begin{enumerate}
-\item First
-\item Second
-\end{enumerate}
-or bullet points \dots
+\section{Features}
+The main features of the developed language are the following:
 \begin{itemize}
-\item First
-\item Second
+\item Variable declaration
+\item Variable assignment
+\item Printing (strings and expressions)
+\item Typing (real and boolean)
+\item Operations (arithmetic and boolean)
+\item Scoping
+\item Comments
+\item Strings and meta chars
 \end{itemize}
+
+
+
+\subsection{General information}
+Each program as usual consists of list of statements. Moreover reserved words and chars are used in order to let the user be able to express some particular commands. Here some general rules which globally apply to the language:
+\begin{enumerate}
+\item Statement delimiter: each statement is delimited by \texttt{\textbf{newline}}.
+\item Stop execution: with the command \texttt{\textbf{halt}} the execution of the program will be interrupted.
+\item Strings: literals containing meta chars are also captured, delimited by single quotes. To use them as part of the string type two consecutive single quotes \texttt{''}. Newline and tabs can be used via \texttt{\textbackslash n} and \texttt{\textbackslash t}.
+\end{enumerate}
+\vspace{1cm}
+
+
+
+\subsection{Syntax and examples}
+Here some example showing the syntax of the developed language parse\\\\\\
+\textbf{Variable} assignment and declaration.
+\begin{lstlisting}[frame=single]
+var pippo : real
+var pluto : boolean
+pippo := 12.5
+pluto := true || false
+\end{lstlisting}
+\vspace{2cm}
+\textbf{Comments}.
+\begin{lstlisting}[frame=single]
+x := 10 (* This is a
+multiline comment *)
+\end{lstlisting}
+\pagebreak
+\textbf{Printing}. Two versions available: \texttt{write} and \texttt{writeln}. The latter puts a newline afterwards. It is possible to print boolean or arithmetic expressions and strings.
+\vspace{0.1cm}
+\begin{lstlisting}[frame=single]
+writeln	'hello ''world'', how are you?\nFine... "Awwww"'
+write -2 * -4
+
+(*
+	hello 'world', how are you?
+	Fine... "Awww"
+	8.000000
+*)
+\end{lstlisting}
+\vspace{2cm}
+\textbf{Operations}. Arithmetic and boolean operations. Some constant are also available: Pi and the Euler's number.
+\begin{lstlisting}[frame=single]
+pippo := 2
+pippo := -pippo + math.e * 40 / math.pi
+pluto := true
+pluto := !pluto && (!true || false) && true
+\end{lstlisting}
+\vspace{2cm}
+\textbf{Scoping}. Scoping is also part of the language. Create a scope by enclosing some statements via reserved keywords \texttt{begin} and \texttt{end}. The scope of a variable so consequently its visibility starts from its declaration until the end of the block scope it belongs to. If a block contains a second block in which a variable is redeclared, then this variable hides the previous variable till the end of the second scope. As soon as the inner block ends, then the first declaration will be available.
+\pagebreak
+\begin{lstlisting}[frame=single]
+var x : real
+x := 1
+writeln x                (* here x has value 1 *)
+begin
+   x := 12.5
+   writeln x             (* here x has value 12.5 *)
+   var x : real
+   x := 2
+   writeln x             (* here x has value 2 *)
+   begin
+      var x : boolean
+      x := true
+      writeln x          (* here x has value true *)
+   end
+   writeln x             (* here x has value 2 *)
+end
+writeln x                (* here x has value 12.5 *)
+\end{lstlisting}
+\vspace{1.5cm}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	References
+%----------------------------------------------------------------------------------------
+\section{References}
+Unibz course webpage:\\
+\url{http://www.inf.unibz.it/~artale/Compiler/compiler.htm}\\\\
+Helpful online resources:\\
+\url{http://www.cs.man.ac.uk/~pjj/cs212/ex2_str_comm.html}\\
+\url{http://epaperpress.com/lexandyacc/str.html}\\
+\url{https://www.programiz.com/c-programming/c-strings}\\
+\url{http://www.learn-c.org/en/Linked_lists}\\
+\url{https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files}\\
+\url{https://www.youtube.com/watch?v=EzBTm73_oU8}\\
+\url{https://stackoverflow.com/questions/7751366/malloc-memory-for-c-string-inside-a-structure}
 
 
 
