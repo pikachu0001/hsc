@@ -1,41 +1,56 @@
+
+
+(* SAMPLE TEST PROGRAM *)
+
+
+
 writeln math.pi * 10
-writeln 2 + 	3
-
-(* wow that's
-a comment*)writeln	'hello ''world'', how are you?\nFine... "Awwww"'
-
+writeln 9 + 	3 *   10
 writeln 5 + math.e
 write -2 * -4
-
-(* another one! 
-
-*)
 writeln
+writeln	'hello ''world'', how are you?\nFine... "Awwww"'
+(*writeln 'no direct tab	is allowed. Use \t'*)				(* decomment and try error: tab not allowed in string *)
 
-(*writeln 'no tab is		allowed'*)					(* decomment and try error: tab not allowed in string *)
-(*y := 98*)												(* decomment and try error: undeclared variable, cannot assign *)
+
+
+(* Un commento
+
+... mitico!
+*)
+
+
+
 var x : real
-(*var x : boolean*)										(* decomment and try error: already declared variable *)
-(*x := true*)											(* decomment and try error: cannot assign boolean to real *)
+(*y := 98*)														(* decomment and try error: undeclared variable, cannot assign *)
+(*var x : boolean*)												(* decomment and try error: already declared variable in the current scope *)
+(*x := true*)													(* decomment and try error: cannot assign boolean to real *)
+(*writeln x*)													(* decomment and try error: variable not initialized *)
+var a : real
+(*a := x*)														(* decomment and try error: variable not initialized *)
 
-var pippo:real
-pippo := 2
-writeln 2 * pippo * pippo
-writeln pippo
-pippo := pippo * pippo * pippo * 40
+
+
+x := 10
+writeln (x + 10) * (x - 10) 
+x := x * x
+writeln x
+
+
 
 var copy : real
-copy := pippo
+copy := x
 copy := copy / 40
-writeln pippo
 writeln copy
 
-(*writeln pluto*)										(* decomment and try error: variable does not exist *)
+
 
 write 'false || true && true = '
 writeln false || true && true
 write '(!true || false) && true = '
 writeln (!true || false) && true
+
+
 
 var pluto : boolean
 pluto := true
@@ -45,69 +60,30 @@ writeln pluto
 
 
 
-
-
-writeln 'try scope'
-
-var w : real
-w := 1
-writeln w (* 1 *)
-
-begin
-
-	var w : real
-	w := 2
-	writeln w (* 2 *)
-
-	begin
-
-		var w : real
-		w := 3
-		writeln w (* 3 *)
-		(* var w : boolean *)
-
-	end
-
-	writeln w (* 2 *)
-
-	begin
-
-		var w : real
-		w := 4
-		writeln w (* 4 *)
-
-	end
-
-	writeln w (* 2 *)
-
-
-end
-
-writeln w (* 1 *)
-
-
-
-writeln 'Another one'
+writeln 'Scope block, variable visibility'
 x := 1
-writeln x                (* here x has value 1 *)
+writeln x					(* here x has value 1 *)
 begin
-   x := 12.5
-   writeln x             (* here x has value 12.5 *)
-   var x : real
-   x := 2
-   writeln x             (* here x has value 2 *)
-   begin
-      var x : boolean
-      x := true
-      writeln x          (* here x has value true *)
-   end
-   writeln x             (* here x has value 2 *)
+	x := 12.5
+	writeln x				(* here x has value 12.5 *)
+	var x : real
+	x := 2
+	writeln x				(* here x has value 2 *)
+	begin
+		var x : boolean
+		x := true
+		writeln x			(* here x has value true *)
+		end
+	writeln x				(* here x has value 2 *)
 end
-writeln x                (* here x has value 12.5 *)
+writeln x					(* here x has value 12.5 *)
 
 
 
 
 
 halt
-writeln 'blah'
+
+
+writeln 'nobody will see me because of ''Halt'''
+

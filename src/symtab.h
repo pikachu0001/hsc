@@ -9,7 +9,7 @@
 	https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files
 	https://www.youtube.com/watch?v=EzBTm73_oU8
 	https://stackoverflow.com/questions/7751366/malloc-memory-for-c-string-inside-a-structure
-
+	https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
 */
 
 
@@ -53,6 +53,7 @@ typedef struct node {
 	char *name;
 	char *type;
 	int scope;
+	int initialized;
 	double value;
 	struct node *next;
 } Node;
@@ -84,8 +85,12 @@ void decrease_scope();
 Node *createUnnamedSymbolForExprAttr(char *type, double value) {
 	Node *node = malloc(sizeof(Node));
 	node->type = malloc(sizeof(type) + 1);
-	node->value = value;
+	node->name = NULL;
 	strcpy(node->type, type);
+	node->scope = scope;
+	node->initialized = 1;
+	node->value = value;
+	node->next = NULL;
 	return node;
 }
 
@@ -98,6 +103,7 @@ void destroyUnnamedSymbolForExprAttrOnly(Node *node) {
 		/* It's a node in the symbol table ie a variable. Do not drop it */
 		return;
 	}
+	// just flush memory related to the expression attribute which is of type node
 	free(node->type);
 	free(node);
 }
@@ -111,10 +117,11 @@ void push(char *name, char *type) {
 	Node *node = malloc(sizeof(Node));
 	node->name = malloc(sizeof(name) + 1);	// +1 for the zero-terminator char '\0'
 	node->type = malloc(sizeof(type) + 1);
-	node->scope = scope;
 	strcpy(node->name, name);
 	strcpy(node->type, type);
-	// add node as head of the linked list and return pointer to it
+	node->scope = scope;
+	node->initialized = 0;
+	node->value = 0;
 	node->next = head;
 	head = node;
 }

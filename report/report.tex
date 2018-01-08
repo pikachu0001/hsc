@@ -187,7 +187,6 @@ pluto := !pluto && (!true || false) && true
 \textbf{Scoping}. Scoping is also part of the language. Create a scope by enclosing some statements via reserved keywords \texttt{begin} and \texttt{end}. The scope of a variable and consequently its visibility starts from its declaration until the end of the block scope it belongs to. If a block contains a second block in which a variable is redeclared, then this variable hides the previous variable till the end of the second scope. As soon as the inner block ends, then the first declaration will be available.
 \pagebreak
 \begin{lstlisting}[frame=single]
-var x : real
 x := 1
 writeln x                (* here x has value 1 *)
 begin
@@ -224,6 +223,7 @@ Helpful online resources:\\
 \url{https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files}\\
 \url{https://www.youtube.com/watch?v=EzBTm73_oU8}\\
 \url{https://stackoverflow.com/questions/7751366/malloc-memory-for-c-string-inside-a-structure}
+\url{https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c}
 
 
 

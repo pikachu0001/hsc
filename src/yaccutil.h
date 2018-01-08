@@ -2,6 +2,17 @@
 // Yacc util c functions
 
 
+/*
+	REFERENCES:
+	https://www.programiz.com/c-programming/c-strings
+	http://www.learn-c.org/en/Linked_lists
+	https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files
+	https://www.youtube.com/watch?v=EzBTm73_oU8
+	https://stackoverflow.com/questions/7751366/malloc-memory-for-c-string-inside-a-structure
+	https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
+*/
+
+
 
 
 // include this .h file only once aka if YACCUTIL has not been never defined yet
@@ -62,17 +73,24 @@ void write_string(char *string) {
 
 
 
-void write_expression(Node *node) {
-	if (strcmp(node->type, BOOLEAN) == 0) {
-		if (node->value > 0) {
+void write_expression(Node *exprattr) {
+	// if exprattr is a variable ie a pointer to a node in the symbol table (node->node != NULL), then check if it has been initialized
+	// if exprattr is a temporary unnamed exprattr (node->name == NULL), then we are sure it has a value so we do nothing... just continue
+	if (exprattr->name != NULL && exprattr->initialized == 0) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "Cannot get the value. The variable \"%s\" has not been initialized", exprattr->name);
+		yyerror(error);
+	}
+	if (strcmp(exprattr->type, BOOLEAN) == 0) {
+		if (exprattr->value > 0) {
 			printf("true");
 		} else {
 			printf("false");
 		}
-	} else if (strcmp(node->type, REAL) == 0) {
-		printf("%f", node->value);
+	} else if (strcmp(exprattr->type, REAL) == 0) {
+		printf("%f", exprattr->value);
 	}
-	destroyUnnamedSymbolForExprAttrOnly(node);
+	destroyUnnamedSymbolForExprAttrOnly(exprattr);
 }
 
 
@@ -88,36 +106,38 @@ void declare_variable(char *name, char* type) {
 		yyerror(error);
 	}
 	push(name, type);
-	// TESTS:
-	// + already declared variable: passed
-	// + not valid type: passed (already blocked by lex via syntax error)
 }
 
 
 
 
 void assign_to_variable(char *name, Node *exprattr) {
-	// assign an expression to a variable only if the variable has been previously declared in the current scope
+	// assign an expression to a variable only if the variable has been previously declared
 	// if not, raise an error
 	Node *node = lookup(name);
 	if (node == NULL) {
 		char *error = malloc(sizeof(100));
-		sprintf(error, "Cannot assign the value. The variable \"%s\" has not been declared in the current scope", name);
+		sprintf(error, "Cannot assign the value. The variable \"%s\" has not been previously declared", name);
+		yyerror(error);
+	}
+	// if exprattr is a variable ie a pointer to a node in the symbol table (node->node != NULL), then check if it has been initialized
+	// if exprattr is a temporary unnamed exprattr (node->name == NULL), then we are sure it has a value so we do nothing... just continue
+	if (exprattr->name != NULL && exprattr->initialized == 0) {
+		char *error = malloc(sizeof(100));
+		sprintf(error, "Cannot get the value. The variable \"%s\" has not been initialized", exprattr->name);
 		yyerror(error);
 	}
 	// now set the value according to the type. Raise an error we try to assign to a variable an expression whose type
 	// is not equal to the one of the variable.
 	if (strcmp(node->type, exprattr->type) == 0) {
 		node->value = exprattr->value;
+		node->initialized = 1;
 	} else {
 		char *error = malloc(sizeof(100));
 		sprintf(error, "Assigning a \"%s\" expression to the variable \"%s\" of type \"%s\" is not allowed", exprattr->type, name, node->type);
 		yyerror(error);
 	}
 	destroyUnnamedSymbolForExprAttrOnly(exprattr);
-	// TESTS:
-	// + assign to undeclared variable: passed
-	// + assign valid value ie real or boolean: passed
 }
 
 
@@ -134,12 +154,12 @@ void pop_variables_at_scope_closed() {
 
 
 Node *get_variable_for_exprattr_transmission(char *name) {
-	// transmit the node pointer to a variable to an exprattr only if the variable exists in the current scope
-	// if not, raise an error
+	// transmit the node pointer to a variable to an exprattr only if the variable exists. The first occurrence of name will be picked up
+	// which is also what we want, ie the one with higher scope (the one with scope closest to the current scope). If not, raise an error
 	Node *node = lookup(name);
 	if (node == NULL) {
 		char *error = malloc(sizeof(100));
-		sprintf(error, "Cannot get the value. The variable \"%s\" has not been declared in the current scope", name);
+		sprintf(error, "Cannot get the value. The variable \"%s\" has not been previously declared", name);
 		yyerror(error);
 	}
 	return node;
