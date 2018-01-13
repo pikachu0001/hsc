@@ -28,6 +28,7 @@ var x : real
 (*writeln x*)													(* decomment and try error: variable not initialized *)
 var a : real
 (*a := x*)														(* decomment and try error: variable not initialized *)
+(*writeln 2 + true*)											(* decomment and try error: "+" operation not allowed between "real" and "boolean" *)
 
 
 

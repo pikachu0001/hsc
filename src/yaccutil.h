@@ -169,7 +169,7 @@ Node *get_variable_for_exprattr_transmission(char *name) {
 
 
 Node *binary_operation(Node *x, Node *y, char *type, char *op) {
-	if (strcmp(x->type, type) == 0 && strcmp(x->type, type) == 0) {
+	if (strcmp(x->type, type) == 0 && strcmp(y->type, type) == 0) {
 		double value = binary_operation_get_value(x->value, y->value, op);
 		Node *exprattr = createUnnamedSymbolForExprAttr(type, value);
 		destroyUnnamedSymbolForExprAttrOnly(x);
