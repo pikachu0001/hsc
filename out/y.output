@@ -18,95 +18,118 @@ Grammar
    10          | write
    11          | HALT
 
-   12 declaration: VAR ID COLON TYPE
+   12 declaration: VAR declist
+   13            | VAR ID COLON TYPE EQUAL expression
 
-   13 assignment: ID ASSIGNMENT expression
+   14 declist: ID COMMA declist
+   15        | ID COLON TYPE
 
-   14 write: WRITE expression
-   15      | WRITE STRING
-   16      | WRITELN expression
-   17      | WRITELN STRING
-   18      | WRITELN
+   16 assignment: ID ASSIGNMENT expression
 
-   19 expression: ROUND_OPEN expression ROUND_CLOSE
-   20           | expression ADD expression
-   21           | expression SUB expression
-   22           | expression MUL expression
-   23           | expression DIV expression
-   24           | SUB expression
-   25           | expression AND expression
-   26           | expression OR expression
-   27           | NOT expression
-   28           | number
-   29           | boolean
-   30           | ID
+   17 write: WRITE writelist
+   18      | WRITELN writelist
+   19      | WRITELN
 
-   31 boolean: TRUE
-   32        | FALSE
+   20 writelist: writelist COMMA expression
+   21          | writelist COMMA STRING
+   22          | expression
+   23          | STRING
 
-   33 number: NUM
-   34       | PI
-   35       | E
+   24 expression: ROUND_OPEN expression ROUND_CLOSE
+   25           | expression ADD expression
+   26           | expression SUB expression
+   27           | expression MUL expression
+   28           | expression DIV expression
+   29           | SUB expression
+   30           | expression AND expression
+   31           | expression OR expression
+   32           | NOT expression
+   33           | expression EQUAL_EQUAL expression
+   34           | expression GREATER expression
+   35           | expression GREATER_EQUAL expression
+   36           | expression LESS expression
+   37           | expression LESS_EQUAL expression
+   38           | number
+   39           | boolean
+   40           | ID
+
+   41 boolean: TRUE
+   42        | FALSE
+
+   43 number: NUM
+   44       | PI
+   45       | E
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-ADD (258) 20
-SUB (259) 21 24
-MUL (260) 22
-DIV (261) 23
-AND (262) 25
-OR (263) 26
-NOT (264) 27
+ADD (258) 25
+SUB (259) 26 29
+MUL (260) 27
+DIV (261) 28
+AND (262) 30
+OR (263) 31
+NOT (264) 32
 NEWLINE (265) 1 3
-ROUND_OPEN (266) 19
-ROUND_CLOSE (267) 19
-COLON (268) 12
-ASSIGNMENT (269) 13
-WRITE (270) 14 15
-WRITELN (271) 16 17 18
-HALT (272) 11
-VAR (273) 12
-TRUE (274) 31
-FALSE (275) 32
-BEGIN_SCOPE (276) 6
-END_SCOPE (277) 6
-TYPE (278) 12
-ID (279) 12 13 30
-STRING (280) 15 17
-PI (281) 34
-E (282) 35
-NUM (283) 33
-UMINUS (284)
+ROUND_OPEN (266) 24
+ROUND_CLOSE (267) 24
+COLON (268) 13 15
+ASSIGNMENT (269) 16
+COMMA (270) 14 20 21
+EQUAL (271) 13
+EQUAL_EQUAL (272) 33
+GREATER (273) 34
+GREATER_EQUAL (274) 35
+LESS (275) 36
+LESS_EQUAL (276) 37
+WRITE (277) 17
+WRITELN (278) 18 19
+HALT (279) 11
+VAR (280) 12 13
+TRUE (281) 41
+FALSE (282) 42
+BEGIN_SCOPE (283) 6
+END_SCOPE (284) 6
+TYPE (285) 13 15
+ID (286) 13 14 15 16 40
+STRING (287) 21 23
+PI (288) 44
+E (289) 45
+NUM (290) 43
+UMINUS (291)
 
 
 Nonterminals, with rules where they appear
 
-$accept (30)
+$accept (37)
     on left: 0
-program (31)
+program (38)
     on left: 1 2 3 6 7, on right: 0 1 3 6
-$@1 (32)
+$@1 (39)
     on left: 4, on right: 6
-$@2 (33)
+$@2 (40)
     on left: 5, on right: 6
-statement (34)
+statement (41)
     on left: 8 9 10 11, on right: 1 2
-declaration (35)
-    on left: 12, on right: 8
-assignment (36)
-    on left: 13, on right: 9
-write (37)
-    on left: 14 15 16 17 18, on right: 10
-expression (38)
-    on left: 19 20 21 22 23 24 25 26 27 28 29 30, on right: 13 14 16
-    19 20 21 22 23 24 25 26 27
-boolean (39)
-    on left: 31 32, on right: 29
-number (40)
-    on left: 33 34 35, on right: 28
+declaration (42)
+    on left: 12 13, on right: 8
+declist (43)
+    on left: 14 15, on right: 12 14
+assignment (44)
+    on left: 16, on right: 9
+write (45)
+    on left: 17 18 19, on right: 10
+writelist (46)
+    on left: 20 21 22 23, on right: 17 18 20 21
+expression (47)
+    on left: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40, on right:
+    13 16 20 22 24 25 26 27 28 29 30 31 32 33 34 35 36 37
+boolean (48)
+    on left: 41 42, on right: 39
+number (49)
+    on left: 43 44 45, on right: 38
 
 
 State 0
@@ -153,8 +176,7 @@ State 1
 
 State 2
 
-   14 write: WRITE . expression
-   15      | WRITE . STRING
+   17 write: WRITE . writelist
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -167,16 +189,16 @@ State 2
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 24
-    boolean     go to state 25
-    number      go to state 26
+    writelist   go to state 24
+    expression  go to state 25
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 3
 
-   16 write: WRITELN . expression
-   17      | WRITELN . STRING
-   18      | WRITELN .
+   18 write: WRITELN . writelist
+   19      | WRITELN .
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -184,16 +206,17 @@ State 3
     TRUE        shift, and go to state 17
     FALSE       shift, and go to state 18
     ID          shift, and go to state 19
-    STRING      shift, and go to state 27
+    STRING      shift, and go to state 20
     PI          shift, and go to state 21
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    $default  reduce using rule 18 (write)
+    $default  reduce using rule 19 (write)
 
-    expression  go to state 28
-    boolean     go to state 25
-    number      go to state 26
+    writelist   go to state 28
+    expression  go to state 25
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 4
@@ -205,9 +228,12 @@ State 4
 
 State 5
 
-   12 declaration: VAR . ID COLON TYPE
+   12 declaration: VAR . declist
+   13            | VAR . ID COLON TYPE EQUAL expression
 
     ID  shift, and go to state 29
+
+    declist  go to state 30
 
 
 State 6
@@ -216,21 +242,21 @@ State 6
 
     $default  reduce using rule 4 ($@1)
 
-    $@1  go to state 30
+    $@1  go to state 31
 
 
 State 7
 
-   13 assignment: ID . ASSIGNMENT expression
+   16 assignment: ID . ASSIGNMENT expression
 
-    ASSIGNMENT  shift, and go to state 31
+    ASSIGNMENT  shift, and go to state 32
 
 
 State 8
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 32
+    $end  shift, and go to state 33
 
 
 State 9
@@ -238,7 +264,7 @@ State 9
     1 program: statement . NEWLINE program
     2        | statement .
 
-    NEWLINE  shift, and go to state 33
+    NEWLINE  shift, and go to state 34
 
     $default  reduce using rule 2 (program)
 
@@ -273,26 +299,7 @@ State 13
 
 State 14
 
-   24 expression: SUB . expression
-
-    SUB         shift, and go to state 14
-    NOT         shift, and go to state 15
-    ROUND_OPEN  shift, and go to state 16
-    TRUE        shift, and go to state 17
-    FALSE       shift, and go to state 18
-    ID          shift, and go to state 19
-    PI          shift, and go to state 21
-    E           shift, and go to state 22
-    NUM         shift, and go to state 23
-
-    expression  go to state 34
-    boolean     go to state 25
-    number      go to state 26
-
-
-State 15
-
-   27 expression: NOT . expression
+   29 expression: SUB . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -305,13 +312,13 @@ State 15
     NUM         shift, and go to state 23
 
     expression  go to state 35
-    boolean     go to state 25
-    number      go to state 26
+    boolean     go to state 26
+    number      go to state 27
 
 
-State 16
+State 15
 
-   19 expression: ROUND_OPEN . expression ROUND_CLOSE
+   32 expression: NOT . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -324,128 +331,162 @@ State 16
     NUM         shift, and go to state 23
 
     expression  go to state 36
-    boolean     go to state 25
-    number      go to state 26
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 16
+
+   24 expression: ROUND_OPEN . expression ROUND_CLOSE
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 37
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 17
 
-   31 boolean: TRUE .
+   41 boolean: TRUE .
 
-    $default  reduce using rule 31 (boolean)
+    $default  reduce using rule 41 (boolean)
 
 
 State 18
 
-   32 boolean: FALSE .
+   42 boolean: FALSE .
 
-    $default  reduce using rule 32 (boolean)
+    $default  reduce using rule 42 (boolean)
 
 
 State 19
 
-   30 expression: ID .
+   40 expression: ID .
 
-    $default  reduce using rule 30 (expression)
+    $default  reduce using rule 40 (expression)
 
 
 State 20
 
-   15 write: WRITE STRING .
+   23 writelist: STRING .
 
-    $default  reduce using rule 15 (write)
+    $default  reduce using rule 23 (writelist)
 
 
 State 21
 
-   34 number: PI .
+   44 number: PI .
 
-    $default  reduce using rule 34 (number)
+    $default  reduce using rule 44 (number)
 
 
 State 22
 
-   35 number: E .
+   45 number: E .
 
-    $default  reduce using rule 35 (number)
+    $default  reduce using rule 45 (number)
 
 
 State 23
 
-   33 number: NUM .
+   43 number: NUM .
 
-    $default  reduce using rule 33 (number)
+    $default  reduce using rule 43 (number)
 
 
 State 24
 
-   14 write: WRITE expression .
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   17 write: WRITE writelist .
+   20 writelist: writelist . COMMA expression
+   21          | writelist . COMMA STRING
 
-    ADD  shift, and go to state 37
-    SUB  shift, and go to state 38
-    MUL  shift, and go to state 39
-    DIV  shift, and go to state 40
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
-
-    $default  reduce using rule 14 (write)
-
-
-State 25
-
-   29 expression: boolean .
-
-    $default  reduce using rule 29 (expression)
-
-
-State 26
-
-   28 expression: number .
-
-    $default  reduce using rule 28 (expression)
-
-
-State 27
-
-   17 write: WRITELN STRING .
+    COMMA  shift, and go to state 38
 
     $default  reduce using rule 17 (write)
 
 
+State 25
+
+   22 writelist: expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    ADD            shift, and go to state 39
+    SUB            shift, and go to state 40
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
+
+    $default  reduce using rule 22 (writelist)
+
+
+State 26
+
+   39 expression: boolean .
+
+    $default  reduce using rule 39 (expression)
+
+
+State 27
+
+   38 expression: number .
+
+    $default  reduce using rule 38 (expression)
+
+
 State 28
 
-   16 write: WRITELN expression .
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   18 write: WRITELN writelist .
+   20 writelist: writelist . COMMA expression
+   21          | writelist . COMMA STRING
 
-    ADD  shift, and go to state 37
-    SUB  shift, and go to state 38
-    MUL  shift, and go to state 39
-    DIV  shift, and go to state 40
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
+    COMMA  shift, and go to state 38
 
-    $default  reduce using rule 16 (write)
+    $default  reduce using rule 18 (write)
 
 
 State 29
 
-   12 declaration: VAR ID . COLON TYPE
+   13 declaration: VAR ID . COLON TYPE EQUAL expression
+   14 declist: ID . COMMA declist
+   15        | ID . COLON TYPE
 
-    COLON  shift, and go to state 43
+    COLON  shift, and go to state 50
+    COMMA  shift, and go to state 51
 
 
 State 30
+
+   12 declaration: VAR declist .
+
+    $default  reduce using rule 12 (declaration)
+
+
+State 31
 
     6 program: BEGIN_SCOPE $@1 . program END_SCOPE $@2 program
 
@@ -459,16 +500,16 @@ State 30
 
     $default  reduce using rule 7 (program)
 
-    program      go to state 44
+    program      go to state 52
     statement    go to state 9
     declaration  go to state 10
     assignment   go to state 11
     write        go to state 12
 
 
-State 31
+State 32
 
-   13 assignment: ID ASSIGNMENT . expression
+   16 assignment: ID ASSIGNMENT . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -480,19 +521,19 @@ State 31
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 45
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 53
+    boolean     go to state 26
+    number      go to state 27
 
 
-State 32
+State 33
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 33
+State 34
 
     1 program: statement NEWLINE . program
 
@@ -506,80 +547,91 @@ State 33
 
     $default  reduce using rule 7 (program)
 
-    program      go to state 46
+    program      go to state 54
     statement    go to state 9
     declaration  go to state 10
     assignment   go to state 11
     write        go to state 12
 
 
-State 34
-
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   24           | SUB expression .
-   25           | expression . AND expression
-   26           | expression . OR expression
-
-    $default  reduce using rule 24 (expression)
-
-
 State 35
 
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
-   27           | NOT expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   29           | SUB expression .
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    $default  reduce using rule 27 (expression)
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 29 (expression)
 
 
 State 36
 
-   19 expression: ROUND_OPEN expression . ROUND_CLOSE
-   20           | expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   32           | NOT expression .
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    ADD          shift, and go to state 37
-    SUB          shift, and go to state 38
-    MUL          shift, and go to state 39
-    DIV          shift, and go to state 40
-    AND          shift, and go to state 41
-    OR           shift, and go to state 42
-    ROUND_CLOSE  shift, and go to state 47
+    $default  reduce using rule 32 (expression)
 
 
 State 37
 
-   20 expression: expression ADD . expression
+   24 expression: ROUND_OPEN expression . ROUND_CLOSE
+   25           | expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    SUB         shift, and go to state 14
-    NOT         shift, and go to state 15
-    ROUND_OPEN  shift, and go to state 16
-    TRUE        shift, and go to state 17
-    FALSE       shift, and go to state 18
-    ID          shift, and go to state 19
-    PI          shift, and go to state 21
-    E           shift, and go to state 22
-    NUM         shift, and go to state 23
-
-    expression  go to state 48
-    boolean     go to state 25
-    number      go to state 26
+    ADD            shift, and go to state 39
+    SUB            shift, and go to state 40
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    ROUND_CLOSE    shift, and go to state 55
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
 
 
 State 38
 
-   21 expression: expression SUB . expression
+   20 writelist: writelist COMMA . expression
+   21          | writelist COMMA . STRING
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -587,18 +639,19 @@ State 38
     TRUE        shift, and go to state 17
     FALSE       shift, and go to state 18
     ID          shift, and go to state 19
+    STRING      shift, and go to state 56
     PI          shift, and go to state 21
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 49
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 57
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 39
 
-   22 expression: expression MUL . expression
+   25 expression: expression ADD . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -610,14 +663,14 @@ State 39
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 50
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 58
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 40
 
-   23 expression: expression DIV . expression
+   26 expression: expression SUB . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -629,14 +682,14 @@ State 40
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 51
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 59
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 41
 
-   25 expression: expression AND . expression
+   27 expression: expression MUL . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -648,14 +701,14 @@ State 41
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 52
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 60
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 42
 
-   26 expression: expression OR . expression
+   28 expression: expression DIV . expression
 
     SUB         shift, and go to state 14
     NOT         shift, and go to state 15
@@ -667,172 +720,592 @@ State 42
     E           shift, and go to state 22
     NUM         shift, and go to state 23
 
-    expression  go to state 53
-    boolean     go to state 25
-    number      go to state 26
+    expression  go to state 61
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 43
 
-   12 declaration: VAR ID COLON . TYPE
+   30 expression: expression AND . expression
 
-    TYPE  shift, and go to state 54
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 62
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 44
 
-    6 program: BEGIN_SCOPE $@1 program . END_SCOPE $@2 program
+   31 expression: expression OR . expression
 
-    END_SCOPE  shift, and go to state 55
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 63
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 45
 
-   13 assignment: ID ASSIGNMENT expression .
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   33 expression: expression EQUAL_EQUAL . expression
 
-    ADD  shift, and go to state 37
-    SUB  shift, and go to state 38
-    MUL  shift, and go to state 39
-    DIV  shift, and go to state 40
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
 
-    $default  reduce using rule 13 (assignment)
+    expression  go to state 64
+    boolean     go to state 26
+    number      go to state 27
 
 
 State 46
+
+   34 expression: expression GREATER . expression
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 65
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 47
+
+   35 expression: expression GREATER_EQUAL . expression
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 66
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 48
+
+   36 expression: expression LESS . expression
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 67
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 49
+
+   37 expression: expression LESS_EQUAL . expression
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 68
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 50
+
+   13 declaration: VAR ID COLON . TYPE EQUAL expression
+   15 declist: ID COLON . TYPE
+
+    TYPE  shift, and go to state 69
+
+
+State 51
+
+   14 declist: ID COMMA . declist
+
+    ID  shift, and go to state 70
+
+    declist  go to state 71
+
+
+State 52
+
+    6 program: BEGIN_SCOPE $@1 program . END_SCOPE $@2 program
+
+    END_SCOPE  shift, and go to state 72
+
+
+State 53
+
+   16 assignment: ID ASSIGNMENT expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    ADD            shift, and go to state 39
+    SUB            shift, and go to state 40
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
+
+    $default  reduce using rule 16 (assignment)
+
+
+State 54
 
     1 program: statement NEWLINE program .
 
     $default  reduce using rule 1 (program)
 
 
-State 47
+State 55
 
-   19 expression: ROUND_OPEN expression ROUND_CLOSE .
+   24 expression: ROUND_OPEN expression ROUND_CLOSE .
 
-    $default  reduce using rule 19 (expression)
-
-
-State 48
-
-   20 expression: expression . ADD expression
-   20           | expression ADD expression .
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
-
-    MUL  shift, and go to state 39
-    DIV  shift, and go to state 40
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
-
-    $default  reduce using rule 20 (expression)
+    $default  reduce using rule 24 (expression)
 
 
-State 49
+State 56
 
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   21           | expression SUB expression .
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   21 writelist: writelist COMMA STRING .
 
-    MUL  shift, and go to state 39
-    DIV  shift, and go to state 40
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
-
-    $default  reduce using rule 21 (expression)
+    $default  reduce using rule 21 (writelist)
 
 
-State 50
+State 57
 
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   22           | expression MUL expression .
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
+   20 writelist: writelist COMMA expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
+    ADD            shift, and go to state 39
+    SUB            shift, and go to state 40
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
 
-    $default  reduce using rule 22 (expression)
-
-
-State 51
-
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   23           | expression DIV expression .
-   25           | expression . AND expression
-   26           | expression . OR expression
-
-    AND  shift, and go to state 41
-    OR   shift, and go to state 42
-
-    $default  reduce using rule 23 (expression)
+    $default  reduce using rule 20 (writelist)
 
 
-State 52
+State 58
 
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   25           | expression AND expression .
-   26           | expression . OR expression
+   25 expression: expression . ADD expression
+   25           | expression ADD expression .
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
 
     $default  reduce using rule 25 (expression)
 
 
-State 53
+State 59
 
-   20 expression: expression . ADD expression
-   21           | expression . SUB expression
-   22           | expression . MUL expression
-   23           | expression . DIV expression
-   25           | expression . AND expression
-   26           | expression . OR expression
-   26           | expression OR expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   26           | expression SUB expression .
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    AND  shift, and go to state 41
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
 
     $default  reduce using rule 26 (expression)
 
 
-State 54
+State 60
 
-   12 declaration: VAR ID COLON TYPE .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   27           | expression MUL expression .
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
 
-    $default  reduce using rule 12 (declaration)
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
+
+    $default  reduce using rule 27 (expression)
 
 
-State 55
+State 61
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   28           | expression DIV expression .
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
+
+    $default  reduce using rule 28 (expression)
+
+
+State 62
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   30           | expression AND expression .
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    $default  reduce using rule 30 (expression)
+
+
+State 63
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   31           | expression OR expression .
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    AND  shift, and go to state 43
+
+    $default  reduce using rule 31 (expression)
+
+
+State 64
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   33           | expression EQUAL_EQUAL expression .
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 33 (expression)
+
+
+State 65
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   34           | expression GREATER expression .
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 34 (expression)
+
+
+State 66
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   35           | expression GREATER_EQUAL expression .
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 35 (expression)
+
+
+State 67
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   36           | expression LESS expression .
+   37           | expression . LESS_EQUAL expression
+
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 36 (expression)
+
+
+State 68
+
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+   37           | expression LESS_EQUAL expression .
+
+    AND  shift, and go to state 43
+    OR   shift, and go to state 44
+
+    EQUAL_EQUAL    error (nonassociative)
+    GREATER        error (nonassociative)
+    GREATER_EQUAL  error (nonassociative)
+    LESS           error (nonassociative)
+    LESS_EQUAL     error (nonassociative)
+
+    $default  reduce using rule 37 (expression)
+
+
+State 69
+
+   13 declaration: VAR ID COLON TYPE . EQUAL expression
+   15 declist: ID COLON TYPE .
+
+    EQUAL  shift, and go to state 73
+
+    $default  reduce using rule 15 (declist)
+
+
+State 70
+
+   14 declist: ID . COMMA declist
+   15        | ID . COLON TYPE
+
+    COLON  shift, and go to state 74
+    COMMA  shift, and go to state 51
+
+
+State 71
+
+   14 declist: ID COMMA declist .
+
+    $default  reduce using rule 14 (declist)
+
+
+State 72
 
     6 program: BEGIN_SCOPE $@1 program END_SCOPE . $@2 program
 
     $default  reduce using rule 5 ($@2)
 
-    $@2  go to state 56
+    $@2  go to state 75
 
 
-State 56
+State 73
+
+   13 declaration: VAR ID COLON TYPE EQUAL . expression
+
+    SUB         shift, and go to state 14
+    NOT         shift, and go to state 15
+    ROUND_OPEN  shift, and go to state 16
+    TRUE        shift, and go to state 17
+    FALSE       shift, and go to state 18
+    ID          shift, and go to state 19
+    PI          shift, and go to state 21
+    E           shift, and go to state 22
+    NUM         shift, and go to state 23
+
+    expression  go to state 76
+    boolean     go to state 26
+    number      go to state 27
+
+
+State 74
+
+   15 declist: ID COLON . TYPE
+
+    TYPE  shift, and go to state 77
+
+
+State 75
 
     6 program: BEGIN_SCOPE $@1 program END_SCOPE $@2 . program
 
@@ -846,14 +1319,51 @@ State 56
 
     $default  reduce using rule 7 (program)
 
-    program      go to state 57
+    program      go to state 78
     statement    go to state 9
     declaration  go to state 10
     assignment   go to state 11
     write        go to state 12
 
 
-State 57
+State 76
+
+   13 declaration: VAR ID COLON TYPE EQUAL expression .
+   25 expression: expression . ADD expression
+   26           | expression . SUB expression
+   27           | expression . MUL expression
+   28           | expression . DIV expression
+   30           | expression . AND expression
+   31           | expression . OR expression
+   33           | expression . EQUAL_EQUAL expression
+   34           | expression . GREATER expression
+   35           | expression . GREATER_EQUAL expression
+   36           | expression . LESS expression
+   37           | expression . LESS_EQUAL expression
+
+    ADD            shift, and go to state 39
+    SUB            shift, and go to state 40
+    MUL            shift, and go to state 41
+    DIV            shift, and go to state 42
+    AND            shift, and go to state 43
+    OR             shift, and go to state 44
+    EQUAL_EQUAL    shift, and go to state 45
+    GREATER        shift, and go to state 46
+    GREATER_EQUAL  shift, and go to state 47
+    LESS           shift, and go to state 48
+    LESS_EQUAL     shift, and go to state 49
+
+    $default  reduce using rule 13 (declaration)
+
+
+State 77
+
+   15 declist: ID COLON TYPE .
+
+    $default  reduce using rule 15 (declist)
+
+
+State 78
 
     6 program: BEGIN_SCOPE $@1 program END_SCOPE $@2 program .
 

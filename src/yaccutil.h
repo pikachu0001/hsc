@@ -51,6 +51,11 @@ extern Node *op_sub(Node *x, Node *y);
 extern Node *op_mul(Node *x, Node *y);
 extern Node *op_div(Node *x, Node *y);
 extern Node *op_uminus(Node *x);
+extern Node *op_equal(Node *x, Node *y);
+extern Node *op_greater(Node *x, Node *y);
+extern Node *op_greater_equal(Node *x, Node *y);
+extern Node *op_less(Node *x, Node *y);
+extern Node *op_less_equal(Node *x, Node *y);
 extern Node *op_and(Node *x, Node *y);
 extern Node *op_or(Node *x, Node *y);
 extern Node *op_not(Node *x);
@@ -171,6 +176,9 @@ Node *get_variable_for_exprattr_transmission(char *name) {
 Node *binary_operation(Node *x, Node *y, char *type, char *op) {
 	if (strcmp(x->type, type) == 0 && strcmp(y->type, type) == 0) {
 		double value = binary_operation_get_value(x->value, y->value, op);
+		if (strcmp(op, "==") == 0 || strcmp(op, ">") == 0 || strcmp(op, ">=") == 0 ||strcmp(op, "<") == 0 || strcmp(op, "<=") == 0) {
+			type = BOOLEAN;
+		}
 		Node *exprattr = createUnnamedSymbolForExprAttr(type, value);
 		destroyUnnamedSymbolForExprAttrOnly(x);
 		destroyUnnamedSymbolForExprAttrOnly(y);
@@ -189,6 +197,11 @@ double binary_operation_get_value(double x, double y, char *op) {
 	if (strcmp(op, "-") == 0)	return x - y;
 	if (strcmp(op, "*") == 0)	return x * y;
 	if (strcmp(op, "/") == 0)	return x / y;
+	if (strcmp(op, "==") == 0)	return x == y;
+	if (strcmp(op, ">") == 0)	return x > y;
+	if (strcmp(op, ">=") == 0)	return x >= y;
+	if (strcmp(op, "<") == 0)	return x < y;
+	if (strcmp(op, "<=") == 0)	return x <= y;
 	if (strcmp(op, "&&") == 0)	return x && y;
 	if (strcmp(op, "||") == 0)	return x || y;
 }
@@ -240,6 +253,41 @@ Node *op_mul(Node *x, Node *y) {
 
 Node *op_div(Node *x, Node *y) {
 	return binary_operation(x, y, REAL, "/");
+}
+
+
+
+
+Node *op_equal(Node *x, Node *y) {
+	return binary_operation(x, y, REAL, "==");
+}
+
+
+
+
+Node *op_greater(Node *x, Node *y) {
+	return binary_operation(x, y, REAL, ">");
+}
+
+
+
+
+Node *op_greater_equal(Node *x, Node *y) {
+	return binary_operation(x, y, REAL, ">=");
+}
+
+
+
+
+Node *op_less(Node *x, Node *y) {
+	return binary_operation(x, y, REAL, "<");
+}
+
+
+
+
+Node *op_less_equal(Node *x, Node *y) {
+	return binary_operation(x, y, REAL, "<=");
 }
 
 

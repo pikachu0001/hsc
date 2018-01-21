@@ -57,21 +57,28 @@ extern int yydebug;
     ROUND_CLOSE = 267,
     COLON = 268,
     ASSIGNMENT = 269,
-    WRITE = 270,
-    WRITELN = 271,
-    HALT = 272,
-    VAR = 273,
-    TRUE = 274,
-    FALSE = 275,
-    BEGIN_SCOPE = 276,
-    END_SCOPE = 277,
-    TYPE = 278,
-    ID = 279,
-    STRING = 280,
-    PI = 281,
-    E = 282,
-    NUM = 283,
-    UMINUS = 284
+    COMMA = 270,
+    EQUAL = 271,
+    EQUAL_EQUAL = 272,
+    GREATER = 273,
+    GREATER_EQUAL = 274,
+    LESS = 275,
+    LESS_EQUAL = 276,
+    WRITE = 277,
+    WRITELN = 278,
+    HALT = 279,
+    VAR = 280,
+    TRUE = 281,
+    FALSE = 282,
+    BEGIN_SCOPE = 283,
+    END_SCOPE = 284,
+    TYPE = 285,
+    ID = 286,
+    STRING = 287,
+    PI = 288,
+    E = 289,
+    NUM = 290,
+    UMINUS = 291
   };
 #endif
 /* Tokens.  */
@@ -87,21 +94,28 @@ extern int yydebug;
 #define ROUND_CLOSE 267
 #define COLON 268
 #define ASSIGNMENT 269
-#define WRITE 270
-#define WRITELN 271
-#define HALT 272
-#define VAR 273
-#define TRUE 274
-#define FALSE 275
-#define BEGIN_SCOPE 276
-#define END_SCOPE 277
-#define TYPE 278
-#define ID 279
-#define STRING 280
-#define PI 281
-#define E 282
-#define NUM 283
-#define UMINUS 284
+#define COMMA 270
+#define EQUAL 271
+#define EQUAL_EQUAL 272
+#define GREATER 273
+#define GREATER_EQUAL 274
+#define LESS 275
+#define LESS_EQUAL 276
+#define WRITE 277
+#define WRITELN 278
+#define HALT 279
+#define VAR 280
+#define TRUE 281
+#define FALSE 282
+#define BEGIN_SCOPE 283
+#define END_SCOPE 284
+#define TYPE 285
+#define ID 286
+#define STRING 287
+#define PI 288
+#define E 289
+#define NUM 290
+#define UMINUS 291
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -115,7 +129,7 @@ union YYSTYPE
 	char *str;
 	Node *sym;
 
-#line 119 "out/y.tab.h" /* yacc.c:1909  */
+#line 133 "out/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

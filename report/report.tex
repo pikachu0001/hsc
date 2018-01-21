@@ -143,36 +143,48 @@ Each program as usual consists of a list of statements. Moreover, reserved words
 \item Stop execution: with the command \texttt{\textbf{halt}} the execution of the program will be interrupted.
 \item Strings: literals containing meta chars are also captured, delimited by single quotes. To use them as part of the string type two consecutive single quotes \texttt{''}. Newlines and tabs can be used via \texttt{\textbackslash n} and \texttt{\textbackslash t}.
 \end{enumerate}
-\vspace{1cm}
+Interesting technical info: regarding multiple declaration (see * below) a right recursive rule has been used in the yacc source file. The main reason is because the type token is at the end of the statement, therefore we have to accumulate all the variable names on the stack. Then, once the end has been reached, reductions will occur and type will be set for each variable name.
+\vspace{2cm}
 
 
 
 \subsection{Syntax and examples}
 Here some examples showing the syntax of the developed language\\\\\\
-\textbf{Variable} assignment and declaration.
+\textbf{Variable declaration}: single and multiple declaration. *
 \begin{lstlisting}[frame=single]
 var pippo : real
 var pluto : boolean
-pippo := 12.5
-pluto := true || false
+var x, y, z, w : boolean
 \end{lstlisting}
-\vspace{2cm}
+\pagebreak
+\textbf{Variable assignment}: after or during declaration.
+\begin{lstlisting}[frame=single]
+var pluto : boolean
+pluto := 40 > 20
+var paperino : real = 0.25
+\end{lstlisting}
+\vspace{1.8cm}
 \textbf{Comments}.
 \begin{lstlisting}[frame=single]
 x := 10 (* This is a
 multiline comment *)
 \end{lstlisting}
-\pagebreak
-\textbf{Printing}. Two versions available: \texttt{write} and \texttt{writeln}. The latter puts a newline afterwards. It is possible to print boolean or arithmetic expressions and strings.
+\vspace{1.8cm}
+\textbf{Printing}. Two versions available: \texttt{write} and \texttt{writeln}. The latter puts a newline afterwards. It is possible to print boolean or arithmetic expressions and strings. Moreover you can print a list of expressions or strings using just one single command. Writeln could also just be used without args to just insert a newline.
 \vspace{0.1cm}
 \begin{lstlisting}[frame=single]
 writeln	'hello ''world'', how are you?\nFine... "Awwww"'
 write -2 * -4
+writeln
+writeln
+writeln 'Euler''s num is ', math.e, '\tPI is ', math.pi
 
 (*
 	hello 'world', how are you?
 	Fine... "Awww"
 	8.000000
+	
+	Euler's num is 2.718281     PI is 3.1415927
 *)
 \end{lstlisting}
 \vspace{2cm}
@@ -180,12 +192,12 @@ write -2 * -4
 \begin{lstlisting}[frame=single]
 pippo := 2
 pippo := -pippo + math.e * 40 / math.pi
+writeln 'Is pippo less or equals to 2? ', pippo <= 2 
 pluto := true
 pluto := !pluto && (!true || false) && true
 \end{lstlisting}
 \vspace{2cm}
 \textbf{Scoping}. Scoping is also part of the language. Create a scope by enclosing some statements via reserved keywords \texttt{begin} and \texttt{end}. The scope of a variable and consequently its visibility starts from its declaration until the end of the block scope it belongs to. If a block contains a second block in which a variable is redeclared, then this variable hides the previous variable till the end of the second scope. As soon as the inner block ends, then the first declaration will be available.
-\pagebreak
 \begin{lstlisting}[frame=single]
 x := 1
 writeln x                (* here x has value 1 *)

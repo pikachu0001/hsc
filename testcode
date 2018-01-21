@@ -26,8 +26,8 @@ var x : real
 (*var x : boolean*)												(* decomment and try error: already declared variable in the current scope *)
 (*x := true*)													(* decomment and try error: cannot assign boolean to real *)
 (*writeln x*)													(* decomment and try error: variable not initialized *)
-var a : real
-(*a := x*)														(* decomment and try error: variable not initialized *)
+var notinit : real
+(*notinit := x*)												(* decomment and try error: variable not initialized *)
 (*writeln 2 + true*)											(* decomment and try error: "+" operation not allowed between "real" and "boolean" *)
 
 
@@ -39,10 +39,28 @@ writeln x
 
 
 
-var copy : real
-copy := x
-copy := copy / 40
-writeln copy
+var a, b, c : real
+var d : real = 4
+a := 1
+b := 2
+c := 3
+writeln a, ' + ', b, ' + ', c, ' + ', d, ' = ', a + b + c + d
+
+
+
+var test : boolean
+test := a == b
+writeln 'Is ', a, '\t==\t', b, '\t?\t', test
+test := !(a == b)
+writeln 'Is ', a, '\t!(==)\t', b, '\t?\t', test
+test := a > b
+writeln 'Is ', a, '\t>\t', b, '\t?\t', test
+test := a >= b
+writeln 'Is ', a, '\t>=\t', b, '\t?\t', test
+test := a < b
+writeln 'Is ', a, '\t<\t', b, '\t?\t', test
+test := a <= b
+writeln 'Is ', a, '\t<=\t', b, '\t?\t', test
 
 
 
