@@ -66,7 +66,7 @@ Ravinder \textsc{Singh} \hfill rsingh@unibz.it
 %	DATE SECTION
 %----------------------------------------------------------------------------------------
 \vfill
-{\large \today}
+{\large January 21, 2018}
 
 
 
@@ -99,17 +99,17 @@ The project is focused on the first part of the compilation only i.e. the analys
 %	SYMBOL TABLE
 %----------------------------------------------------------------------------------------
 \section{Symbol table}
-The symbol table is a data structure whose aim is to save additional information we might want to preserve in order to give meaning to the program. It is usually shared among lex and yacc. During the lexical analysis the code is tokenized and categorized. On the other hand, this process of categorization usually results in a loss of information related to the categorized token such as name, value. As a result, a symbol table could be used in order to preseve this information we might lose. Additional attributes will be later on added during the parsing phase such as type, scope, etc. which could be only expressed by the hierchical structure of the program. In this project, the symbol table is a linked list where each node, usually a variable, is denoted by the following four attributes: name, type, value and scope level. Here an example follows.
+The symbol table is a data structure whose aim is to save additional information we might want to preserve in order to give meaning to the program. It is usually shared among lex and yacc. During the lexical analysis the code is tokenized and categorized. On the other hand, this process of categorization usually results in a loss of information related to the categorized token such as name, value. As a result, a symbol table could be used in order to preseve this information we might lose. Additional attributes will be later on added during the parsing phase such as type, scope, etc. which could be only expressed by the hierchical structure of the program. In this project, the symbol table is a linked list where each node, usually a variable, is denoted by the following five attributes: name, type, value, scope level, initialized. Here an example follows.
 \vspace{0.3cm}
 \begin{table}[h!]
 \centering
-\begin{tabular}{c|c|c|c}
-price & real & 140.05 & 1 \\
-done & boolean & 1 & 0 \\
-price & real & 9.2 & 0 \\
-rate & real & 12.57 & 0 \\
+\begin{tabular}{c|c|c|c|c}
+price & real & 140.05 & 1 & 1\\
+done & boolean & 1 & 0 & 1\\
+price & real & 0 & 0 & 0\\
+rate & real & 12.57 & 0 & 1\\
 \hline
-Name & Type & Value & Scope
+Name & Type & Value & Scope & Initialized
 \end{tabular}
 \end{table}
 \vspace{1.7cm}
@@ -124,11 +124,11 @@ Name & Type & Value & Scope
 \section{Features}
 The main features of the developed language are the following:
 \begin{itemize}
-\item Variable declaration
+\item Variable declaration (single or multiple)
 \item Variable assignment
-\item Printing (strings and expressions)
+\item Printing (strings and expressions) also with multiple args
 \item Typing (real and boolean)
-\item Operations (arithmetic and boolean)
+\item Operations (arithmetic and boolean: $+\ -\ *\ /\ !\ \&\&\ ||\ ==\ <=\ >\ etc.$)
 \item Scoping
 \item Comments
 \item Strings and meta chars
@@ -192,7 +192,7 @@ writeln 'Euler''s num is ', math.e, '\tPI is ', math.pi
 \begin{lstlisting}[frame=single]
 pippo := 2
 pippo := -pippo + math.e * 40 / math.pi
-writeln 'Is pippo less or equals to 2? ', pippo <= 2 
+writeln 'Is pippo less or equal to 2? ', pippo <= 2 
 pluto := true
 pluto := !pluto && (!true || false) && true
 \end{lstlisting}
